@@ -43,7 +43,7 @@ def mimicry_context(request: HttpRequest) -> dict[str, any]:
     This context processor should be added to the 'context_processors' option in Django's template settings to
     ensure that the required context variables are available in every template.
     """
-    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_CONTROL_CONDITION, False)
+    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_FEATURE_CONTROL_CONDITION, False)
     primary_key_name: str = UserModel._meta.pk.name
     if isinstance(request.user, AnonymousUser):
         simulated_user_pk: str = 'unauthenticated'

@@ -57,7 +57,7 @@ def new_simulated_session(request: HttpRequest, hide_bar: bool = False) -> HttpR
     Returns:
     - HttpRequest: Modified request object.
     """
-    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_CONTROL_CONDITION, False)
+    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_FEATURE_CONTROL_CONDITION, False)
     request.simulated_user_pk = getattr(request, 'simulated_user_pk', None)
     if control_condition and request.simulated_user_pk:
         real_session_key: str | None = request.session.session_key
@@ -107,7 +107,7 @@ def set_hide_bar(request: HttpRequest, hide_bar_status: bool = True) -> HttpRequ
     Returns:
     - HttpRequest: Modified request object.
     """
-    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_CONTROL_CONDITION, False)
+    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_FEATURE_CONTROL_CONDITION, False)
     if control_condition:
         try:
             simulated_session: SimulatedUserSession = SimulatedUserSession.objects.get(
@@ -132,7 +132,7 @@ def disable_bar(request: HttpRequest) -> HttpRequest:
     Returns:
     - HttpRequest: Modified request object.
     """
-    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_CONTROL_CONDITION, False)
+    control_condition: bool = getattr(request.real_user, app_settings.MIMICRY_FEATURE_CONTROL_CONDITION, False)
     if control_condition:
         try:
             simulated_session: SimulatedUserSession = SimulatedUserSession.objects.get(
