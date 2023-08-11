@@ -91,7 +91,6 @@ def new_simulated_session(request: HttpRequest, hide_bar: bool = False) -> HttpR
             simulated_session.save()
         except IntegrityError:
             pass
-        request.session['_is_simulated_user_session'] = True
 
     return request
 
@@ -159,7 +158,7 @@ def coordinate_request_with_simulated_session(request: HttpRequest) -> HttpReque
     - HttpRequest: Modified request object.
     """
     request.real_user = getattr(request, 'real_user', request.user)
-    _is_simulated_user_session: bool = getattr(request.session, '_is_simulated_user_session', False)
+    _is_simulated_user_session: bool = request.session.get('_is_simulated_user_session', False)
     if app_settings.ENABLE_MIMICRY:
         session_key: str = request.session.session_key
         if _is_simulated_user_session:
@@ -242,6 +241,7 @@ def change_user(request: HttpRequest, user: UserModel | AnonymousUser) -> HttpRe
         request.real_user = real_user
         request.simulation_created_at = simulation_created_at
         request.simulated_user_pk = simulated_user_pk
+        request.session["_is_simulated_user_session"] = True
 
     return request
 
