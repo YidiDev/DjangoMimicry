@@ -93,8 +93,8 @@ def mimicry_context(request: HttpRequest) -> dict[str, any]:
     context: dict[str, any] = {
         'simulate_user_form': form,
         'switch_simulated_user_url': reverse('mimicry_switch_user'),
-        'show_simulated_user_control_bar': show_bar,
-        'simulated_user_control_bar_enabled': bar_enabled,
+        'show_mimicry_control_bar': show_bar,
+        'mimicry_control_bar_enabled': bar_enabled,
         'time_since_last_change': time_since_last_change
     }
 
