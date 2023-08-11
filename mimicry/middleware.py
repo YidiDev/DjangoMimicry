@@ -4,7 +4,7 @@ from .app_settings import app_settings
 from .utils import coordinate_request_with_simulated_session
 
 
-class SimulateUserMiddleware:
+class MimicryMiddleware:
     """
     Middleware to facilitate the user simulation feature.
 
