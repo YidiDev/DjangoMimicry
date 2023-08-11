@@ -91,7 +91,7 @@ def mimicry_context(request: HttpRequest) -> dict[str, any]:
         bar_enabled: bool = False
 
     context: dict[str, any] = {
-        'simulate_user_form': form,
+        'mimicry_form': form,
         'switch_simulated_user_url': reverse('mimicry_switch_user'),
         'show_mimicry_control_bar': show_bar,
         'mimicry_control_bar_enabled': bar_enabled,
