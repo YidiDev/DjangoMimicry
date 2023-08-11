@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-mimicry',
-    version='1.5',
+    version='1.6',
     packages=find_packages(exclude=['djangoMimicryProject']),
     include_package_data=True,
     license='MIT License',
