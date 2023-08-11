@@ -28,6 +28,7 @@ Import the `app_settings` object and access the settings attributes as needed.
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db.models import BooleanField
 
 
 UserModel = get_user_model()
@@ -73,24 +74,31 @@ class SimulateUserSettings:
             raise TypeError(f"Expected type for {name} is {expected_type}, but got {type(value)}.")
 
         if name == 'MIMICRY_FEATURE_CONTROL_CONDITION':
-            self.validate_user_control_condition(value)
+            self.validate_boolean_user_attribute(value)
 
         if name == 'MIMICRY_PERMISSIONS':
             self.validate_user_permissions(value)
 
         return value
 
+    @classmethod
+    def validate_boolean_user_attribute(cls, attr: str) -> None:
+        """Validates if the given attribute corresponds to a boolean attribute of the User model."""
+        field = cls.get_user_model_field(attr)
+        if not isinstance(field, BooleanField):
+            raise TypeError(f"'{attr}' is not a boolean field of the User model.")
+
+    # noinspection PyProtectedMember
     @staticmethod
-    def validate_user_control_condition(condition: str) -> None:
-        """Validates if the given condition corresponds to a boolean attribute of the User model."""
-        if not hasattr(UserModel, condition):
-            raise ValueError(f"'{condition}' is not an attribute of the User model.")
+    def get_user_model_field(attr: str):
+        """Retrieve field instance for a given attribute of the User model."""
+        try:
+            return UserModel._meta.get_field(attr)
+        except Exception:
+            raise TypeError(f"'{attr}' is not an attribute of the User model.")
 
-        attribute_type = type(getattr(UserModel, condition))
-        if attribute_type != bool:
-            raise ValueError(f"'{condition}' is not a boolean attribute of the User model.")
-
-    def validate_user_permissions(self, permissions: list) -> None:
+    @classmethod
+    def validate_user_permissions(cls, permissions: list) -> None:
         """Validates the SIMULATE_USER_PERMISSIONS setting."""
         if not all(isinstance(perm, dict) for perm in permissions):
             raise TypeError("All elements in 'MIMICRY_PERMISSIONS' should be dictionaries.")
@@ -98,10 +106,8 @@ class SimulateUserSettings:
         for perm in permissions:
             for key in ['SIMULATED_USER_ATTRIBUTE', 'REAL_USER_ATTRIBUTE']:
                 if key not in perm:
-                    raise TypeError(
-                        f"Each dictionary in 'MIMICRY_PERMISSIONS' must contain the key '{key}'.")
-
-                self.validate_user_control_condition(perm[key])
+                    raise TypeError(f"Each dictionary in 'MIMICRY_PERMISSIONS' must contain the key '{key}'.")
+                cls.validate_boolean_user_attribute(perm[key])
 
 
 # Create an instance of the class, so we can use its attributes
