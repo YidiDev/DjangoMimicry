@@ -84,9 +84,10 @@ class SimulateUserSettings:
     @classmethod
     def validate_boolean_user_attribute(cls, attr: str) -> None:
         """Validates if the given attribute corresponds to a boolean attribute of the User model."""
-        field = cls.get_user_model_field(attr)
-        if not isinstance(field, BooleanField):
-            raise TypeError(f"'{attr}' is not a boolean field of the User model.")
+        if attr != '_ALWAYS_TRUE':
+            field = cls.get_user_model_field(attr)
+            if not isinstance(field, BooleanField):
+                raise TypeError(f"'{attr}' is not a boolean field of the User model.")
 
     # noinspection PyProtectedMember
     @staticmethod
